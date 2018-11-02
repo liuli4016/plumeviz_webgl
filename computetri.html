@@ -1,0 +1,60 @@
+
+<html lang="en">
+	<head>
+		<title>triangulate</title>
+		<meta charset="utf-8">
+    <script type="text/javascript" src="../eddyview/three.js"></script>
+    <script type="text/javascript" src="../eddyview/delaunay.js"></script>
+  </head>
+    
+  <body>	
+  	<p id="demo"></p>
+  	  
+    <script type= "text/javascript">
+   
+        var xhttp = new XMLHttpRequest();
+        var vertices = [];
+        var printstring = "";
+
+        xhttp.onreadystatechange = function() 
+        {
+           if (this.readyState == 4 && this.status == 200) 
+           {
+           	          	
+              var pattern, result;
+
+              // float float float
+              pattern = /([\+|\-]?[\d]+[\.][\d|\-|e]+)[ ]+([\+|\-]?[\d]+[\.][\d|\-|e]+)[ ]+([\+|\-]?[\d]+[\.][\d|\-|e]+)/g;              
+
+              while ( ( result = pattern.exec( this.responseText ) ) != null ) 
+              {         	
+                  vertices.push( new THREE.Vector3(parseFloat(result[1]), parseFloat(result[2]), parseFloat(result[3])) );
+              }
+                            
+              var triangles = triangulate(vertices);
+                          
+              //console.log(triangles);
+              
+              for (var i=0; i<triangles.length; i++)
+              {
+              	  var currentline = triangles[i].v2.x + ' ' + triangles[i].v2.y + ' ' + triangles[i].v2.z + ' ' + triangles[i].v1.x + ' ' + triangles[i].v1.y + ' ' + triangles[i].v1.z + ' ' + triangles[i].v0.x + ' ' + triangles[i].v0.y + ' ' + triangles[i].v0.z + "<br />";
+    
+              	  printstring = printstring + currentline;
+              }
+              
+              document.getElementById("demo").innerHTML = printstring;   
+              
+              //console.log(printstring);                                 
+           }
+        };
+        
+        xhttp.open("GET", "covisbathy.txt", true);
+        xhttp.send();
+        
+        //document.getElementById("demo").innerHTML = printstring; 
+        
+        
+</script>
+<body>
+</body>
+</html>
